@@ -4,4 +4,8 @@
     <ProjectReference Include="..\PerforceMcp.Core\PerforceMcp.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="PerforceMcp.Perforce.Tests" />
+  </ItemGroup>
+
 </Project>
