@@ -81,6 +81,18 @@ Build a local read-only MCP prototype exposing:
 
 Issue #2, the technology decision, is complete.
 
+## Build and test
+
+From the repository root, run:
+
+```powershell
+dotnet restore PerforceMcp.slnx
+dotnet build PerforceMcp.slnx --no-restore
+dotnet test PerforceMcp.slnx --no-build
+```
+
+The current scaffold starts no MCP server and runs no Perforce commands. Server hosting and read-only tools are added by later milestone issues.
+
 ## Delivery phases
 
 1. Read-only local MCP prototype

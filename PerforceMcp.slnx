@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PerforceMcp.Core/PerforceMcp.Core.csproj" />
+    <Project Path="src/PerforceMcp.Perforce/PerforceMcp.Perforce.csproj" />
+    <Project Path="src/PerforceMcp.Server/PerforceMcp.Server.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PerforceMcp.Core.Tests/PerforceMcp.Core.Tests.csproj" />
+    <Project Path="tests/PerforceMcp.Perforce.Tests/PerforceMcp.Perforce.Tests.csproj" />
+  </Folder>
+</Solution>

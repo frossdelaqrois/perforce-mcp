@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PerforceMcp.Core\PerforceMcp.Core.csproj" />
+    <ProjectReference Include="..\PerforceMcp.Perforce\PerforceMcp.Perforce.csproj" />
+  </ItemGroup>
+
+</Project>

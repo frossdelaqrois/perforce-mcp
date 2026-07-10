@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PerforceMcp.Core\PerforceMcp.Core.csproj" />
+  </ItemGroup>
+
+</Project>
