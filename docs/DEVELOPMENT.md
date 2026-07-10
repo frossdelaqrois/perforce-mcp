@@ -1,6 +1,6 @@
 # Development Setup
 
-The implementation has not been scaffolded yet. This document records the intended first setup.
+The repository contains the initial .NET 10 solution scaffold for the read-only prototype.
 
 ## Prerequisites
 
@@ -13,9 +13,9 @@ The implementation has not been scaffolded yet. This document records the intend
 ## Initial workflow
 
 1. Clone the repository.
-2. Restore .NET dependencies.
-3. Build the solution.
-4. Run unit tests.
+2. Restore .NET dependencies with `dotnet restore PerforceMcp.slnx`.
+3. Build the solution with `dotnet build PerforceMcp.slnx --no-restore`.
+4. Run unit tests with `dotnet test PerforceMcp.slnx --no-build`.
 5. Configure test Perforce settings outside source control.
 6. Start the MCP server locally.
 7. Call read-only tools from the MCP client.
@@ -26,4 +26,4 @@ The implementation has not been scaffolded yet. This document records the intend
 - Prefer normal Perforce configuration mechanisms and environment variables.
 - Test fixtures must use fictional users, servers, clients, and depot paths.
 
-Exact commands will be added by the project-scaffolding issue.
+The scaffold does not start an MCP server or invoke Perforce yet. Those behaviours are added by later read-only milestone issues.
