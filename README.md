@@ -70,16 +70,18 @@ Build a local read-only MCP prototype exposing:
 - `get_opened_files`
 - `get_pending_changelists`
 
-### Recommended Codex order
+### Recommended Codex issue order
 
-1. **Issue #3** — Scaffold the C# solution and tests
-2. **Issue #4** — Discover and validate `p4`
-3. **Issue #5** — Safe Perforce process runner and error model
-4. **Issue #6** — `get_perforce_info`
-5. **Issue #7** — `get_opened_files`
-6. **Issue #8** — `get_pending_changelists`
+- [x] **Issue #2** — Decide the .NET and MCP SDK versions
+- [x] **Issue #3** — Scaffold the C# solution and tests
+- [ ] **Issue #4** — Discover and validate `p4` *(implementation in PR #28; review fixes requested)*
+- [ ] **Issue #27** — Add GitHub Actions CI
+- [ ] **Issue #5** — Safe Perforce process runner and error model
+- [ ] **Issue #6** — `get_perforce_info`
+- [ ] **Issue #7** — `get_opened_files`
+- [ ] **Issue #8** — `get_pending_changelists`
 
-Issue #2, the technology decision, is complete.
+Check an item only after its pull request has been reviewed and merged into `main`.
 
 ## Build and test
 
@@ -143,9 +145,10 @@ The current scaffold starts no MCP server and runs no Perforce commands. Server 
 ## Repository status
 
 - Product planning and architecture: substantially defined
-- Initial implementation: not yet scaffolded
-- First technology decision: complete
-- Read-only implementation issues: ready for Codex
+- Initial .NET solution scaffold: complete
+- Technology decision: complete
+- `p4` discovery implementation: under review in PR #28
+- Read-only implementation issues: sequenced for Codex
 - Hosted and ChatGPT app work: specified as later issues
 
 Public APIs and architecture may still change during the prototype stage.
