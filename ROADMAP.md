@@ -18,6 +18,7 @@ Publish a trustworthy Perforce integration in the ChatGPT app directory. It shou
 
 - Create the MCP server project
 - Locate and validate the `p4` executable
+- Add GitHub Actions checks for restore, build, tests, and formatting
 - Run commands without invoking a shell
 - Parse tagged or JSON-compatible Perforce output
 - Add `get_perforce_info`

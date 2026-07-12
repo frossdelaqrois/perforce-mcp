@@ -13,7 +13,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PerforceMcp.Perforce\PerforceMcp.Perforce.csproj" />
+    <ProjectReference Include="..\P4ValidatorTestProcess\P4ValidatorTestProcess.csproj"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+  <Target Name="CopyP4ValidatorTestProcess" AfterTargets="Build">
+    <ItemGroup>
+      <P4ValidatorTestProcessFiles Include="..\P4ValidatorTestProcess\bin\$(Configuration)\$(TargetFramework)\P4ValidatorTestProcess.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(P4ValidatorTestProcessFiles)" DestinationFolder="$(OutDir)" />
+  </Target>
 
   <ItemGroup>
     <Using Include="Xunit" />
