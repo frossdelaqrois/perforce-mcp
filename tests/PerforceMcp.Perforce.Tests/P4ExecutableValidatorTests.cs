@@ -2,6 +2,7 @@ using System.Diagnostics;
 
 namespace PerforceMcp.Perforce.Tests;
 
+[Collection(P4ProcessTestGroup.Name)]
 public sealed class P4ExecutableValidatorTests
 {
     [Fact]
