@@ -96,6 +96,12 @@ dotnet format PerforceMcp.slnx --verify-no-changes --no-restore
 
 GitHub Actions runs the same four commands for pull requests and pushes to `main`. NuGet lock files are committed so dependency caching is keyed to the complete resolved package graph.
 
+## Perforce process runner
+
+The Perforce adapter contains an internal process runner constructed from a successfully validated executable result. It invokes that absolute executable directly, passes arguments through `ProcessStartInfo.ArgumentList`, applies cancellation and timeouts with bounded cleanup, and captures at most 32 KiB from each output stream. Results include the exit code, duration, truncation flags, redacted output, and a stable structured error when execution fails.
+
+The runner is not an MCP tool and does not accept shell command strings. Callers must provide known argument lists for narrowly defined Perforce operations. Passwords, tickets, and caller-supplied sensitive values are redacted from captured output.
+
 The current scaffold starts no MCP server and runs no Perforce commands. Server hosting and read-only tools are added by later milestone issues.
 
 ## Delivery phases
