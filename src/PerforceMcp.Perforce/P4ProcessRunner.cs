@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace PerforceMcp.Perforce;
 
-internal sealed partial class P4ProcessRunner
+internal sealed partial class P4ProcessRunner : IP4ProcessRunner
 {
     internal const int MaximumCapturedCharactersPerStream = 32 * 1024;
 

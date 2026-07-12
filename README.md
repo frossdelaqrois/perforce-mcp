@@ -76,7 +76,7 @@ Build a local read-only MCP prototype exposing:
 - [x] **Issue #3** — Scaffold the C# solution and tests
 - [x] **Issue #4** — Discover and validate `p4`
 - [x] **Issue #27** — Add GitHub Actions CI
-- [ ] **Issue #5** — Safe Perforce process runner and error model
+- [x] **Issue #5** — Safe Perforce process runner and error model
 - [ ] **Issue #6** — `get_perforce_info`
 - [ ] **Issue #7** — `get_opened_files`
 - [ ] **Issue #8** — `get_pending_changelists`
@@ -102,7 +102,11 @@ The Perforce adapter contains an internal process runner constructed from a succ
 
 The runner is not an MCP tool and does not accept shell command strings. Callers must provide known argument lists for narrowly defined Perforce operations. Passwords, tickets, and caller-supplied sensitive values are redacted from captured output.
 
-The current scaffold starts no MCP server and runs no Perforce commands. Server hosting and read-only tools are added by later milestone issues.
+## `get_perforce_info`
+
+The first read-only MCP tool runs only `p4 -ztag info` through the safe process runner. It returns the server address, current user, client/workspace, client root, and server version as structured fields. It reports missing login, missing workspace, unreachable server, malformed output, and timeout conditions without returning passwords, tickets, raw environment data, or raw command output.
+
+Set `PERFORCE_MCP_P4_PATH` to an absolute `p4` or `p4.exe` path to override PATH discovery when starting the stdio server. The optional integration test is skipped unless `PERFORCE_MCP_TEST_P4_PATH` contains an absolute path to a test `p4` executable configured for a disposable test server.
 
 ## Delivery phases
 
