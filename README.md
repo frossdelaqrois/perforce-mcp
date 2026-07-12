@@ -91,7 +91,10 @@ From the repository root, run:
 dotnet restore PerforceMcp.slnx
 dotnet build PerforceMcp.slnx --no-restore
 dotnet test PerforceMcp.slnx --no-build
+dotnet format PerforceMcp.slnx --verify-no-changes --no-restore
 ```
+
+GitHub Actions runs the same four commands for pull requests and pushes to `main`. NuGet lock files are committed so dependency caching is keyed to the complete resolved package graph.
 
 The current scaffold starts no MCP server and runs no Perforce commands. Server hosting and read-only tools are added by later milestone issues.
 
