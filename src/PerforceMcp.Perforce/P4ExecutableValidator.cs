@@ -27,6 +27,7 @@ internal interface IP4ExecutableValidator
 internal sealed class P4ExecutableValidator : IP4ExecutableValidator
 {
     private const int MaximumCapturedCharactersPerStream = 32 * 1024;
+    private static readonly TimeSpan ProcessCleanupTimeout = TimeSpan.FromSeconds(2);
 
     public async Task<P4ExecutableValidationResult> ValidateAsync(
         string executablePath,
@@ -153,15 +154,23 @@ internal sealed class P4ExecutableValidator : IP4ExecutableValidator
                 process.Kill(entireProcessTree: true);
             }
         }
-        catch (InvalidOperationException)
+        catch (Exception exception) when (
+            exception is InvalidOperationException or Win32Exception or NotSupportedException)
         {
         }
 
+        using var cleanupSource = new CancellationTokenSource(ProcessCleanupTimeout);
+
         try
         {
-            await process.WaitForExitAsync().ConfigureAwait(false);
+            await process
+                .WaitForExitAsync(cleanupSource.Token)
+                .ConfigureAwait(false);
         }
         catch (InvalidOperationException)
+        {
+        }
+        catch (OperationCanceledException) when (cleanupSource.IsCancellationRequested)
         {
         }
     }
