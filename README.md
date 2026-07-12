@@ -75,7 +75,7 @@ Build a local read-only MCP prototype exposing:
 - [x] **Issue #2** — Decide the .NET and MCP SDK versions
 - [x] **Issue #3** — Scaffold the C# solution and tests
 - [x] **Issue #4** — Discover and validate `p4`
-- [ ] **Issue #27** — Add GitHub Actions CI
+- [x] **Issue #27** — Add GitHub Actions CI
 - [ ] **Issue #5** — Safe Perforce process runner and error model
 - [ ] **Issue #6** — `get_perforce_info`
 - [ ] **Issue #7** — `get_opened_files`
