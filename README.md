@@ -108,6 +108,14 @@ The first read-only MCP tool runs only `p4 -ztag info` through the safe process 
 
 Set `PERFORCE_MCP_P4_PATH` to an absolute `p4` or `p4.exe` path to override PATH discovery when starting the stdio server. The optional integration test is skipped unless `PERFORCE_MCP_TEST_P4_PATH` contains an absolute path to a test `p4` executable configured for a disposable test server.
 
+## `get_opened_files`
+
+This read-only MCP tool runs only tagged `p4 opened` through the safe process runner. It returns a structured list containing each depot path, local path when Perforce supplies one, open action, changelist, file type, observed lock state, and whether the file type requires exclusive open. It never returns raw `p4 opened` output or file contents.
+
+The optional `limit` is 50 by default and must be from 1 to 200. The adapter asks Perforce for one extra record so `isTruncated` reliably indicates that more results exist. The optional `changelist` filter accepts `default` or a positive pending changelist number; other values are rejected before `p4` runs. Empty workspaces return a successful empty list. Missing login, missing workspace, unreachable server, timeout, malformed or oversized tagged output, and other non-zero exits return stable structured errors without echoing raw output.
+
+The optional integration test uses the same `PERFORCE_MCP_TEST_P4_PATH` setting as `get_perforce_info` and is safe against a disposable or normal workspace because it only reads opened-file metadata.
+
 ## Delivery phases
 
 1. Read-only local MCP prototype

@@ -26,10 +26,23 @@ The repository contains the initial .NET 10 solution scaffold for the read-only 
 - Prefer normal Perforce configuration mechanisms and environment variables.
 - Test fixtures must use fictional users, servers, clients, and depot paths.
 
-The scaffold does not start an MCP server or invoke Perforce yet. Those behaviours are added by later read-only milestone issues.
-
 ## Perforce executable discovery
 
 The Perforce adapter accepts an absolute configured path to `p4` or `p4.exe` and otherwise searches absolute directories in `PATH`. It validates candidates by invoking the executable directly with the `-V` argument, without a command shell, and returns the validated path and `Rev. P4/...` version line. Validation has a five-second default timeout and captures at most 32 KiB from each output stream.
 
 Discovery does not connect to a Perforce server, run `p4 info` or other operational commands, parse repository data, add network functionality, or expose an MCP tool.
+
+## Manual `get_opened_files` testing
+
+Start the MCP server with a non-production Perforce workspace, then try:
+
+- “Show my opened Perforce files.”
+- “Group my opened files by changelist.”
+- “How many Unreal assets do I currently have checked out?”
+- “Which opened files are `.uasset` or `.umap` files?”
+- Request a small limit and confirm `isTruncated` when more files are open.
+- Filter by `default` and by a numbered pending changelist.
+
+Also verify a workspace with no opened files returns a successful empty list. For reversible failure testing, temporarily select a nonexistent client or unreachable test endpoint, confirm the structured `MissingClient` or `UnreachableServer` error, and restore the original configuration in a cleanup step. Do not run these tests against production settings or log credentials, tickets, environment dumps, or raw command output.
+
+Set `PERFORCE_MCP_TEST_P4_PATH` to an absolute configured test `p4` executable to enable the optional integration tests. They remain skipped by default.
