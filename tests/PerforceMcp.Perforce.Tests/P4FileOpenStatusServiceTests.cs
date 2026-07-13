@@ -107,8 +107,8 @@ public sealed class P4FileOpenStatusServiceTests
         Assert.True(match.IsOpen);
         Assert.True(match.IsBlocking);
         Assert.Collection(match.Opens,
-            own => { Assert.True(own.IsOpenedByCurrentUser); Assert.False(own.BlocksCurrentUser); },
-            other => { Assert.False(other.IsOpenedByCurrentUser); Assert.True(other.IsLocked); Assert.True(other.IsExclusiveOpen); Assert.True(other.BlocksCurrentUser); });
+            own => { Assert.True(own.IsCurrentUser); Assert.True(own.IsCurrentClient); Assert.True(own.IsCurrentWorkspaceOpen); Assert.False(own.BlocksCurrentUser); },
+            other => { Assert.False(other.IsCurrentUser); Assert.False(other.IsCurrentClient); Assert.False(other.IsCurrentWorkspaceOpen); Assert.True(other.IsLocked); Assert.True(other.IsExclusiveOpen); Assert.True(other.BlocksCurrentUser); });
     }
 
     [Fact]
@@ -133,6 +133,56 @@ public sealed class P4FileOpenStatusServiceTests
         Assert.True(match.IsOpen);
         Assert.False(match.IsBlocking);
         Assert.False(match.Opens[0].BlocksCurrentUser);
+    }
+
+    [Fact]
+    public async Task VisibleLockOnNonExclusiveFileDoesNotProveEditingIsBlocked()
+    {
+        const string metadata = """
+            ... depotFile //Aurora/Main/Source/Hero.cpp
+            ... clientFile D:\FictionalStudio\Aurora\Source\Hero.cpp
+            ... headType text
+            """;
+        const string opened = """
+            ... depotFile //Aurora/Main/Source/Hero.cpp
+            ... user Grace
+            ... client Aurora_Grace
+            ... action edit
+            ... change 4109
+            ... type text
+            ... locked 1
+            """;
+        var runner = new QueueRunner(Success(Info), Success(metadata), Success(opened));
+        P4FileOpenMatch match = Assert.Single((await new P4FileOpenStatusService(runner).GetAsync("//Aurora/Main/Source/Hero.cpp")).Matches);
+
+        Assert.True(match.Opens[0].IsLocked);
+        Assert.False(match.Opens[0].IsExclusiveOpen);
+        Assert.False(match.Opens[0].BlocksCurrentUser);
+        Assert.False(match.IsBlocking);
+        Assert.Contains("none proves", match.BlockingReason, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SameUserExclusiveOpenInAnotherWorkspaceBlocksCurrentWorkspace()
+    {
+        const string opened = """
+            ... depotFile //Aurora/Main/Content/MainLevel.umap
+            ... user Ada
+            ... client Aurora_Ada_Laptop
+            ... action edit
+            ... change 4110
+            ... type binary+l
+            """;
+        var runner = new QueueRunner(Success(Info), Success(MapMetadata), Success(opened));
+        P4FileOpenMatch match = Assert.Single((await new P4FileOpenStatusService(runner).GetAsync("//Aurora/Main/Content/MainLevel.umap")).Matches);
+        P4FileOpenRecord record = Assert.Single(match.Opens);
+
+        Assert.True(record.IsCurrentUser);
+        Assert.False(record.IsCurrentClient);
+        Assert.False(record.IsCurrentWorkspaceOpen);
+        Assert.True(record.IsExclusiveOpen);
+        Assert.True(record.BlocksCurrentUser);
+        Assert.True(match.IsBlocking);
     }
 
     [Fact]

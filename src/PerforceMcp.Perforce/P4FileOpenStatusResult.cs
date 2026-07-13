@@ -22,7 +22,9 @@ public sealed record P4FileOpenRecord(
     string FileType,
     bool IsLocked,
     bool IsExclusiveOpen,
-    bool IsOpenedByCurrentUser,
+    bool IsCurrentUser,
+    bool IsCurrentClient,
+    bool IsCurrentWorkspaceOpen,
     bool BlocksCurrentUser);
 
 public sealed record P4FileOpenMatch(

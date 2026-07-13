@@ -149,11 +149,14 @@ workspace are rejected.
 
 Each match contains canonical depot and local paths, file type, Unreal-asset
 classification for `.uasset` and `.umap`, and structured open records containing
-the user, client, action, changelist, lock state, exclusive-open state, current-user
-state, and whether that record blocks the current user. Candidate and open-record
+the user, client, action, changelist, observed lock state, exclusive-open state,
+whether the user and client match the current workspace, and whether that record
+blocks the current workspace. Candidate and open-record
 truncation are reported separately. A file opened by another
-user is reported as blocking only when the visible record is locked or uses an
-exclusive-open file type. The tool never returns file contents or performs an
+user—or by the current username in another client—is reported as blocking only
+when the visible record uses an exclusive-open (`+l`) file type. A `locked` tag is
+reported as raw observed state but does not independently prove that editing is
+blocked. The tool never returns file contents or performs an
 unlock, revert, checkout, sync, or other write operation.
 
 The implementation uses only fixed, bounded tagged `info`, `files`, `fstat`, and

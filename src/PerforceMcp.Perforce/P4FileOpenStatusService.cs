@@ -29,7 +29,7 @@ public sealed class P4FileOpenStatusService
             return P4FileOpenStatusResult.Failure(normalizedQuery, limit, P4FileOpenStatusErrorCode.MalformedOutput,
                 "Perforce returned incomplete workspace information.");
         }
-        if (!Required(info, "clientName", out _) || !Required(info, "clientRoot", out string? clientRoot))
+        if (!Required(info, "clientName", out string? currentClient) || !Required(info, "clientRoot", out string? clientRoot))
         {
             return P4FileOpenStatusResult.Failure(normalizedQuery, limit, P4FileOpenStatusErrorCode.MissingClient,
                 "No valid Perforce client/workspace is configured for this environment.");
@@ -96,12 +96,16 @@ public sealed class P4FileOpenStatusService
 
         bool openRecordsTruncated = opened.Count > MaximumOpenRecords;
         opened = opened.Take(MaximumOpenRecords).ToList();
-        var matches = metadata.Select(file => BuildMatch(file, opened, currentUser!)).ToArray();
+        var matches = metadata.Select(file => BuildMatch(file, opened, currentUser!, currentClient!)).ToArray();
         bool ambiguous = isExactName && (matches.Length > 1 || candidatesTruncated || fstatTruncated);
         return new(normalizedQuery, matches, matches.Length, limit, ambiguous, candidatesTruncated || fstatTruncated, openRecordsTruncated, null);
     }
 
-    private static P4FileOpenMatch BuildMatch(Dictionary<string, string> file, List<Dictionary<string, string>> opened, string currentUser)
+    private static P4FileOpenMatch BuildMatch(
+        Dictionary<string, string> file,
+        List<Dictionary<string, string>> opened,
+        string currentUser,
+        string currentClient)
     {
         string depotPath = file["depotFile"];
         string fileType = file["headType"];
@@ -109,17 +113,19 @@ public sealed class P4FileOpenStatusService
             .Select(record =>
             {
                 string openType = record["type"];
-                bool isCurrent = string.Equals(record["user"], currentUser, StringComparison.OrdinalIgnoreCase);
+                bool isCurrentUser = string.Equals(record["user"], currentUser, StringComparison.OrdinalIgnoreCase);
+                bool isCurrentClient = string.Equals(record["client"], currentClient, StringComparison.OrdinalIgnoreCase);
+                bool isCurrentWorkspaceOpen = isCurrentUser && isCurrentClient;
                 bool exclusive = IsExclusive(openType);
                 bool locked = Truthy(record, "locked") || Truthy(record, "lock") || Truthy(record, "ourLock");
                 return new P4FileOpenRecord(record["user"], record["client"], record["action"], record["change"], openType,
-                    locked, exclusive, isCurrent, !isCurrent && (exclusive || locked));
+                    locked, exclusive, isCurrentUser, isCurrentClient, isCurrentWorkspaceOpen, exclusive && !isCurrentWorkspaceOpen);
             }).ToArray();
         bool blocking = records.Any(record => record.BlocksCurrentUser);
-        string reason = blocking ? "Another user has an exclusive-open or locked record for this file."
+        string reason = blocking ? "An exclusive-open (+l) record is held outside the current user and workspace combination."
             : records.Length == 0 ? "The file is not open by any visible user."
-            : records.All(record => record.IsOpenedByCurrentUser) ? "The file is open only by the current user."
-            : "The file is open, but no visible open record is exclusive or locked.";
+            : records.All(record => record.IsCurrentWorkspaceOpen) ? "The file is open only by the current user in the current workspace."
+            : "Visible open or lock records exist, but none proves that editing is blocked in the current workspace.";
         string extension = Path.GetExtension(depotPath);
         bool unreal = extension.Equals(".uasset", StringComparison.OrdinalIgnoreCase) || extension.Equals(".umap", StringComparison.OrdinalIgnoreCase);
         return new(depotPath, file.GetValueOrDefault("clientFile"), fileType, unreal, records.Length > 0, blocking, reason, records);
