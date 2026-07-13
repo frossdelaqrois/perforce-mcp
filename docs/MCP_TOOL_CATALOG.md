@@ -46,10 +46,10 @@ Purpose: List files opened in the current workspace.
 Input:
 
 ```json
-{ "changelist": 12345, "maxResults": 200 }
+{ "changelist": "12345", "limit": 50 }
 ```
 
-Both fields are optional. Return depot path, local path when permitted, action, changelist, file type, and lock state.
+Both fields are optional. `changelist` accepts a positive number or `default`; `limit` defaults to 50 and is capped at 200. Return depot path, local path when Perforce supplies one, action, changelist, file type, observed lock state, and exclusive-open state. Indicate truncation and never return raw command output.
 
 ## `get_pending_changelists`
 

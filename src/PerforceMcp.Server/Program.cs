@@ -18,6 +18,7 @@ if (!executable.IsSuccess)
 }
 
 builder.Services.AddSingleton(new P4InfoService(executable));
+builder.Services.AddSingleton(new P4OpenedFilesService(executable));
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
