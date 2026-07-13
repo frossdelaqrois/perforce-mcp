@@ -78,7 +78,7 @@ Build a local read-only MCP prototype exposing:
 - [x] **Issue #27** — Add GitHub Actions CI
 - [x] **Issue #5** — Safe Perforce process runner and error model
 - [x] **Issue #6** — `get_perforce_info`
-- [ ] **Issue #7** — `get_opened_files`
+- [x] **Issue #7** — `get_opened_files`
 - [ ] **Issue #8** — `get_pending_changelists`
 
 Check an item only after its pull request has been reviewed and merged into `main`.
@@ -115,6 +115,14 @@ This read-only MCP tool runs only tagged `p4 opened` through the safe process ru
 The optional `limit` is 50 by default and must be from 1 to 200. The adapter asks Perforce for one extra record so `isTruncated` reliably indicates that more results exist. The optional `changelist` filter accepts `default` or a positive pending changelist number; other values are rejected before `p4` runs. Empty workspaces return a successful empty list. Missing login, missing workspace, unreachable server, timeout, malformed or oversized tagged output, and other non-zero exits return stable structured errors without echoing raw output.
 
 The optional integration test uses the same `PERFORCE_MCP_TEST_P4_PATH` setting as `get_perforce_info` and is safe against a disposable or normal workspace because it only reads opened-file metadata.
+
+## `get_pending_changelists`
+
+This read-only MCP tool lists pending changelists owned by the current Perforce user and workspace. It uses only tagged `info`, bounded `changes -s pending`, and bounded `opened -c` queries through the safe process runner. The default changelist appears only when it contains opened files and is explicitly identified by `id: "default"`, `number: null`, and `isDefault: true`; numbered changelists carry their numeric identifier, description, owner, client, pending status, and modified time.
+
+The optional `limit` defaults to 20 and is capped at 100. File metadata is omitted unless `includeFiles` is true, while `fileLimit` independently defaults to 100 and is capped at 200 per changelist. `fileCount` reports the number safely inspected; `isFileCountExact` is false and `filesTruncated` is true when the per-changelist bound was reached. No raw command output or file contents are returned.
+
+Empty results are successful. Invalid limits, missing login, missing workspace, unreachable server, timeout, malformed or oversized tagged output, and other non-zero exits return structured errors without echoing credentials, tickets, environment values, or raw output. The optional integration test is enabled by `PERFORCE_MCP_TEST_P4_PATH` and skipped by default.
 
 ## Delivery phases
 

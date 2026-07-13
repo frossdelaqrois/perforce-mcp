@@ -58,8 +58,10 @@ Purpose: List pending changelists for the current user/workspace.
 Input:
 
 ```json
-{ "includeFiles": false, "maxResults": 100 }
+{ "limit": 20, "includeFiles": false, "fileLimit": 100 }
 ```
+
+All fields are optional. `limit` is capped at 100 changelists and `fileLimit` at 200 files per changelist. Return a clearly identified default changelist when it contains opened files plus numbered pending changelists for the current user/workspace. Each result contains description, owner, client, status, modified time when available, bounded file count with exactness metadata, optional structured files, and truncation state. Never return raw command output or file contents.
 
 # Phase 2: expanded read access
 
