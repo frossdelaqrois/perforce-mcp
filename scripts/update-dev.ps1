@@ -29,7 +29,7 @@ function Invoke-Stage {
 
 try {
     Push-Location $root
-    Invoke-Stage 'Restore packages' { dotnet restore $solution }
+    Invoke-Stage 'Restore packages' { dotnet restore $solution --locked-mode }
     Invoke-Stage 'Build Release' { dotnet build $solution --configuration Release --no-restore }
     Invoke-Stage 'Run tests' { dotnet test $solution --configuration Release --no-build }
     Invoke-Stage 'Verify formatting' { dotnet format $solution --verify-no-changes --no-restore }
