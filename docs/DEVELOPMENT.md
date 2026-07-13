@@ -46,3 +46,15 @@ Start the MCP server with a non-production Perforce workspace, then try:
 Also verify a workspace with no opened files returns a successful empty list. For reversible failure testing, temporarily select a nonexistent client or unreachable test endpoint, confirm the structured `MissingClient` or `UnreachableServer` error, and restore the original configuration in a cleanup step. Do not run these tests against production settings or log credentials, tickets, environment dumps, or raw command output.
 
 Set `PERFORCE_MCP_TEST_P4_PATH` to an absolute configured test `p4` executable to enable the optional integration tests. They remain skipped by default.
+
+## Manual `get_pending_changelists` testing
+
+With the MCP server connected to a non-production workspace, try:
+
+- “Show my pending Perforce changelists.”
+- “Which pending changelist was modified most recently?”
+- “Include files in my pending changelists.”
+- “Summarize the default changelist separately from numbered changelists.”
+- Request small changelist and file limits and confirm both truncation states are explicit.
+
+Verify an empty workspace returns a successful empty list, an opened default changelist has `isDefault: true` and no number, and numbered changelists include owner, client, status, modified time, and bounded file-count metadata. Reuse the reversible connection/workspace failure checks above and restore the original configuration in a cleanup step.
