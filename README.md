@@ -77,7 +77,7 @@ Build a local read-only MCP prototype exposing:
 - [x] **Issue #4** — Discover and validate `p4`
 - [x] **Issue #27** — Add GitHub Actions CI
 - [x] **Issue #5** — Safe Perforce process runner and error model
-- [ ] **Issue #6** — `get_perforce_info`
+- [x] **Issue #6** — `get_perforce_info`
 - [ ] **Issue #7** — `get_opened_files`
 - [ ] **Issue #8** — `get_pending_changelists`
 
