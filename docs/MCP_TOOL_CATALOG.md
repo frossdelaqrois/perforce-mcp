@@ -65,6 +65,15 @@ All fields are optional. `limit` is capped at 100 changelists and `fileLimit` at
 
 # Phase 2: expanded read access
 
+## `get_file_open_status`
+
+Resolve one depot path, in-workspace local path, or exact filename and return a
+bounded structured list of matches. Report open user, client, action, changelist,
+file type, lock and exclusive-open state, whether the opener is the current user,
+and whether the visible state actually blocks the current user. Exact-name
+ambiguity must be explicit; `.uasset` and `.umap` are identified as Unreal binary
+assets. This tool is read-only and never unlocks or modifies a file.
+
 ## `list_workspaces`
 List accessible clients/workspaces with owner, host, root, stream, and last access time.
 
