@@ -94,13 +94,26 @@ dotnet test PerforceMcp.slnx --no-build
 dotnet format PerforceMcp.slnx --verify-no-changes --no-restore
 ```
 
-On Windows, `scripts\update-dev.ps1` runs the complete restore, Release build,
-test, and formatting workflow with a clear stage summary. The `.bat` wrapper is
-available for Command Prompt users:
+On Windows, `scripts\update-dev.ps1` reports the current branch, commit, version,
+and working-tree state, then runs the complete restore, Release build, test, and
+formatting workflow with a clear stage summary. It also detects changes to the
+built MCP server DLLs, reminds you to restart Codex when necessary, and finishes
+with a `Ready to test` status. The `.bat` wrapper is available for Command Prompt
+users:
 
 ```powershell
 .\scripts\update-dev.ps1
 ```
+
+Pass `-Pull` to update the current branch first with a fast-forward-only pull.
+Pulling is refused when the working tree has local changes:
+
+```powershell
+.\scripts\update-dev.ps1 -Pull
+```
+
+The batch wrapper forwards arguments, so Command Prompt users can run
+`scripts\update-dev.bat -Pull`.
 
 Use `scripts\clean.ps1` (or `clean.bat`) to remove generated `bin` and `obj`
 directories beneath `src` and `tests`.
