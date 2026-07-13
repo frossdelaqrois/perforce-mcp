@@ -30,20 +30,22 @@ Publish a trustworthy Perforce integration in the ChatGPT app directory. It shou
 
 ## Phase 2 — Perforce read capabilities
 
-- List clients/workspaces
-- Search depot files
-- Read file metadata and history
-- Show diffs with size limits
-- Identify locks and users holding them
-- Read streams and branches
-- Summarise changelists without leaking secrets
+- **Who has this asset open?** Identify locks and users holding files.
+- **Explain my Perforce error.** Convert safe, redacted diagnostics into actionable guidance.
+- **Summarise today's work.** Group the current user's opened files and changelists.
+- **Show only Unreal assets I'm editing.** Filter `.uasset` and `.umap` work clearly.
+- **Find files blocking my sync.** Surface relevant workspace and lock metadata.
+- **Recent submissions affecting my workspace.** Read bounded file history and changelists.
+- Add supporting workspace, depot search, diff, stream, and branch reads only as these workflows require them.
 
 **Exit:** The app covers common investigation and status questions.
 
-## Phase 3 — Local companion application
+## Phase 3 — Windows companion, P4V, and UnrealGameSync
 
 - Build a signed Windows companion service or tray app
 - Discover P4V and UnrealGameSync installations
+- Open changelists in P4V and files in Unreal Editor
+- Launch UnrealGameSync and expose narrow, previewable sync-to-good-build workflows
 - Pair a user device with the hosted gateway
 - Store tokens in Windows Credential Manager
 - Add automatic updates and revocation
@@ -63,11 +65,9 @@ Publish a trustworthy Perforce integration in the ChatGPT app directory. It shou
 
 **Exit:** Common write workflows are reliable, auditable, and confirmation-gated.
 
-## Phase 5 — UnrealGameSync and Unreal Engine
+## Phase 5 — Deeper Unreal Engine workflows
 
-- Detect UGS project configuration
-- Show latest build status
-- Launch sync/build workflows through the companion
+- Extend UGS project and build-status support beyond the Phase 3 launch integrations
 - Explain build and compile failures
 - Detect checked-out `.uasset` and `.umap` files
 - Improve lock and exclusive-edit guidance
