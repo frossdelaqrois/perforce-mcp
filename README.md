@@ -79,7 +79,7 @@ Build a local read-only MCP prototype exposing:
 - [x] **Issue #5** — Safe Perforce process runner and error model
 - [x] **Issue #6** — `get_perforce_info`
 - [x] **Issue #7** — `get_opened_files`
-- [ ] **Issue #8** — `get_pending_changelists`
+- [x] **Issue #8** — `get_pending_changelists`
 
 Check an item only after its pull request has been reviewed and merged into `main`.
 
@@ -93,6 +93,17 @@ dotnet build PerforceMcp.slnx --no-restore
 dotnet test PerforceMcp.slnx --no-build
 dotnet format PerforceMcp.slnx --verify-no-changes --no-restore
 ```
+
+On Windows, `scripts\update-dev.ps1` runs the complete restore, Release build,
+test, and formatting workflow with a clear stage summary. The `.bat` wrapper is
+available for Command Prompt users:
+
+```powershell
+.\scripts\update-dev.ps1
+```
+
+Use `scripts\clean.ps1` (or `clean.bat`) to remove generated `bin` and `obj`
+directories beneath `src` and `tests`.
 
 GitHub Actions runs the same four commands for pull requests and pushes to `main`. NuGet lock files are committed so dependency caching is keyed to the complete resolved package graph.
 
