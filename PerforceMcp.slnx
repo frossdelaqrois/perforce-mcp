@@ -8,5 +8,6 @@
     <Project Path="tests/P4ValidatorTestProcess/P4ValidatorTestProcess.csproj" />
     <Project Path="tests/PerforceMcp.Core.Tests/PerforceMcp.Core.Tests.csproj" />
     <Project Path="tests/PerforceMcp.Perforce.Tests/PerforceMcp.Perforce.Tests.csproj" />
+    <Project Path="tests/PerforceMcp.Server.Tests/PerforceMcp.Server.Tests.csproj" />
   </Folder>
 </Solution>
