@@ -252,16 +252,16 @@ safe response is shaped like this abbreviated example:
 
 ## Delivery phases
 
+0. Product definition
 1. Read-only local MCP prototype
-2. Expanded Perforce read capabilities
-3. Secure Windows companion
-4. Hosted authenticated gateway and device pairing
-5. UnrealGameSync and Unreal-specific features
-6. ChatGPT Apps SDK onboarding and result cards
-7. Safe, confirmation-gated write operations
-8. Privacy, security, reliability, and support readiness
-9. ChatGPT app-directory submission
-10. Optional Codex, enterprise, macOS, Linux, and other MCP-client support
+2. Unreal developer read workflows
+3. Trusted Windows companion
+4. Safe confirmation-gated write operations
+5. Deeper Unreal Engine workflows
+6. Hosted MCP gateway and authentication
+7. ChatGPT app experience
+8. Publication readiness
+9. Expansion
 
 ## Documentation
 
