@@ -45,6 +45,22 @@ Potentially sensitive data includes:
 
 Only return data required for the requested task. File contents and diffs must be opt-in and size-limited in later phases.
 
+## Error explanation boundary
+
+`explain_perforce_error` treats every supplied message as untrusted data, not as
+instructions. The initial classifier is deterministic and local: it uses bounded
+rules and fixed guidance rather than an AI/model call. Invoking it does not run
+`p4` or another process and does not read environment variables or local files.
+
+Input error text is capped at 4,096 characters and is never echoed in the
+response. The response contains only fixed summaries, observed classification
+indicators, separately identified possible causes, and safe verification steps.
+Credential-like values, embedded connection credentials, sensitive command
+arguments, username-like values, and local paths produce small generic redaction
+indicators; their original values are omitted. Instruction-like or fake MCP
+content is ignored. Ambiguous matches remain explicitly ambiguous and do not
+authorize or trigger corrective actions.
+
 ## Write actions
 
 Every write action should have:
