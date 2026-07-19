@@ -72,7 +72,9 @@ Build a local read-only MCP prototype exposing:
 
 Phase 2 begins with `get_file_open_status`, which answers who has a specific
 file or Unreal asset open and whether the visible open state blocks the current
-user.
+user. It now also includes `explain_perforce_error`, a deterministic local
+classifier for bounded, untrusted Perforce error text and known Companion error
+codes.
 
 ### Recommended Codex issue order
 
@@ -176,6 +178,44 @@ The implementation uses only fixed, bounded tagged `info`, `files`, `fstat`, and
 `opened -a` reads through the safe process runner. Its optional integration test
 uses `PERFORCE_MCP_TEST_P4_PATH` and optionally `PERFORCE_MCP_TEST_FILE`; it is
 skipped by default.
+
+## `explain_perforce_error`
+
+This Phase 2 read-only tool accepts optional `errorText` and `errorCode` fields;
+at least one is required. `errorText` is limited to 4,096 characters and
+`errorCode` to 64 characters. Recognized structured codes include the stable
+codes already returned by Companion tools, such as `MissingLogin`,
+`MissingClient`, `UnreachableServer`, and `TimedOut`, plus their documented
+catalog forms such as `AUTH_REQUIRED` and `SERVER_UNREACHABLE`. Unknown supplied
+codes and oversized or empty requests return structured request errors.
+
+The classifier is deterministic, local, and rule based. It does not call an AI
+model, execute `p4` or another process, read files, or inspect environment
+variables. It never returns the supplied error text. Instead, it returns a
+normalized category and code, a short summary, observed facts, separately
+labelled possible causes, safe verification steps, confidence and ambiguity
+indicators, and bounded redaction indicators. Authentication, connection,
+workspace, permission, resolve, exclusive-lock, storage, temporary server, and
+unknown or ambiguous failures are covered initially.
+
+Credential-like values, embedded credentials, sensitive command arguments,
+username-like values, and local paths are detected and omitted. Instruction-like
+or fake MCP content is treated only as untrusted data and is never followed. A
+safe response is shaped like this abbreviated example:
+
+```json
+{
+  "category": "authentication",
+  "normalizedCode": "AUTH_REQUIRED",
+  "summary": "Perforce authentication is required or may have expired.",
+  "observedFacts": ["A recognized structured error code identified a specific category."],
+  "possibleCauses": ["The login session may be missing or expired."],
+  "safeNextSteps": ["Verify login status using an approved read-only connection check."],
+  "confidence": "High",
+  "isAmbiguous": false,
+  "redactionOccurred": false
+}
+```
 
 ## Delivery phases
 

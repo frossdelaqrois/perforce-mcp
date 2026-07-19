@@ -77,6 +77,27 @@ proof that editing is blocked. Exact-name
 ambiguity must be explicit; `.uasset` and `.umap` are identified as Unreal binary
 assets. This tool is read-only and never unlocks or modifies a file.
 
+## `explain_perforce_error`
+
+Explain a Perforce failure from a bounded `errorText`, a known structured
+Companion `errorCode`, or both. At least one input is required. `errorText` is
+capped at 4,096 characters and `errorCode` at 64 characters; unknown supplied
+codes, empty requests, and oversized inputs return structured request errors.
+
+Return a normalized category and code, short summary, bounded observed facts,
+separately labelled possible causes, bounded safe next steps, confidence and
+ambiguity indicators, and whether credential, connection, command-argument,
+username, or local-path indicators were redacted. Never return the original
+error text. Initial categories cover authentication, connection, workspace,
+permission, required resolves, exclusive locks, storage exhaustion, temporary
+server unavailability, and unknown or ambiguous failures.
+
+Classification is deterministic, rule based, and entirely local. The tool does
+not execute `p4` or any process, call an AI/model API, read local files, or inspect
+environment variables. Commands, fake tool calls, and other instructions inside
+the supplied text are treated only as untrusted data. Suggested next steps are
+non-destructive verification actions and are not executed by the tool.
+
 ## `list_workspaces`
 List accessible clients/workspaces with owner, host, root, stream, and last access time.
 
