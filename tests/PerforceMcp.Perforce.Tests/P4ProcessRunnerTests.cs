@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace PerforceMcp.Perforce.Tests;
 
 [Collection(P4ProcessTestGroup.Name)]
@@ -49,7 +47,7 @@ public sealed class P4ProcessRunnerTests
     [Fact]
     public async Task TimeoutTerminatesTheChildProcess()
     {
-        HashSet<int> existingProcessIds = GetTestProcessIds();
+        HashSet<int> existingProcessIds = P4ProcessTestAssertions.GetProcessIds();
         var options = new P4ProcessRunnerOptions
         {
             Timeout = TimeSpan.FromMilliseconds(250),
@@ -59,13 +57,13 @@ public sealed class P4ProcessRunnerTests
 
         Assert.Equal(P4ProcessErrorCode.TimedOut, result.Error?.Code);
         Assert.Null(result.ExitCode);
-        Assert.Empty(GetTestProcessIds().Except(existingProcessIds));
+        await P4ProcessTestAssertions.AssertNoNewProcessesRemainAsync(existingProcessIds);
     }
 
     [Fact]
     public async Task CancellationTerminatesTheChildProcessAndPropagates()
     {
-        HashSet<int> existingProcessIds = GetTestProcessIds();
+        HashSet<int> existingProcessIds = P4ProcessTestAssertions.GetProcessIds();
         using var cancellationSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
@@ -74,7 +72,7 @@ public sealed class P4ProcessRunnerTests
                 new P4ProcessRunnerOptions { Timeout = TimeSpan.FromSeconds(10) },
                 cancellationSource.Token));
 
-        Assert.Empty(GetTestProcessIds().Except(existingProcessIds));
+        await P4ProcessTestAssertions.AssertNoNewProcessesRemainAsync(existingProcessIds);
     }
 
     [Fact]
@@ -126,23 +124,6 @@ public sealed class P4ProcessRunnerTests
                 : "P4ValidatorTestProcess");
         return new P4ProcessRunner(
             P4ExecutableDiscoveryResult.Success(executablePath, "test version"));
-    }
-
-    private static HashSet<int> GetTestProcessIds()
-    {
-        string processName = OperatingSystem.IsWindows()
-            ? "P4ValidatorTestProcess"
-            : "P4ValidatorTest";
-        return Process
-            .GetProcessesByName(processName)
-            .Select(process =>
-            {
-                using (process)
-                {
-                    return process.Id;
-                }
-            })
-            .ToHashSet();
     }
 
     private static int CountOccurrences(string value, string searchValue) =>
