@@ -76,16 +76,49 @@ user. It now also includes `explain_perforce_error`, a deterministic local
 classifier for bounded, untrusted Perforce error text and known Companion error
 codes.
 
+## Project progress
+
+GitHub phase-parent issues are the canonical source for progress and ordering.
+The counts below are a linked snapshot of those issue checklists, last refreshed
+on 19 July 2026; they are counts, not estimated completion percentages.
+
+| Phase | Focus | Status | Checklist | Canonical source |
+| --- | --- | --- | --- | --- |
+| 0 | Product definition | Defined; reviews remain | — | Product documentation |
+| 1 | Read-only local MCP prototype | Complete | — | [Milestone #1](https://github.com/frossdelaqrois/perforce-mcp/issues/1) |
+| 2 | Unreal developer read workflows | Active | 2 / 8 | [Phase parent #46](https://github.com/frossdelaqrois/perforce-mcp/issues/46) |
+| 3 | Trusted Windows companion | Planned | 0 / 8 | [Phase parent #48](https://github.com/frossdelaqrois/perforce-mcp/issues/48) |
+| 4 | Safe confirmation-gated writes | Planned | 0 / 10 | [Phase parent #55](https://github.com/frossdelaqrois/perforce-mcp/issues/55) |
+| 5 | Deeper Unreal Engine workflows | Planned | — | [`ROADMAP.md`](ROADMAP.md#phase-5--deeper-unreal-engine-workflows) |
+| 6 | Hosted gateway and authentication | Planned | — | [`ROADMAP.md`](ROADMAP.md#phase-6--hosted-mcp-gateway-and-authentication) |
+| 7 | ChatGPT app experience | Planned | — | [`ROADMAP.md`](ROADMAP.md#phase-7--chatgpt-app-experience) |
+| 8 | Publication readiness | Planned | — | [`ROADMAP.md`](ROADMAP.md#phase-8--publication-readiness) |
+| 9 | Expansion | Planned | — | [`ROADMAP.md`](ROADMAP.md#phase-9--expansion) |
+
+### Current Sprint
+
+- **Current phase:** Phase 2 — Unreal developer read workflows ([2 / 8 in #46](https://github.com/frossdelaqrois/perforce-mcp/issues/46)).
+- **Next ordered feature:** [#40 — Summarise today's Perforce work](https://github.com/frossdelaqrois/perforce-mcp/issues/40).
+- **Progress documentation:** [#57](https://github.com/frossdelaqrois/perforce-mcp/issues/57) keeps this snapshot and the roadmap aligned with GitHub.
+
+### Recently Completed
+
+- [#39 — Explain Perforce errors safely](https://github.com/frossdelaqrois/perforce-mcp/issues/39), merged in [PR #56](https://github.com/frossdelaqrois/perforce-mcp/pull/56).
+- [#36 — Who has this asset open?](https://github.com/frossdelaqrois/perforce-mcp/issues/36), merged in [PR #38](https://github.com/frossdelaqrois/perforce-mcp/pull/38).
+
+See [`ROADMAP.md`](ROADMAP.md) for the expanded phase checklists and the
+documented synchronization workflow.
+
 ### Recommended Codex issue order
 
-- [x] **Issue #2** — Decide the .NET and MCP SDK versions
-- [x] **Issue #3** — Scaffold the C# solution and tests
-- [x] **Issue #4** — Discover and validate `p4`
-- [x] **Issue #27** — Add GitHub Actions CI
-- [x] **Issue #5** — Safe Perforce process runner and error model
-- [x] **Issue #6** — `get_perforce_info`
-- [x] **Issue #7** — `get_opened_files`
-- [x] **Issue #8** — `get_pending_changelists`
+- [x] [**Issue #2** — Decide the .NET and MCP SDK versions](https://github.com/frossdelaqrois/perforce-mcp/issues/2)
+- [x] [**Issue #3** — Scaffold the C# solution and tests](https://github.com/frossdelaqrois/perforce-mcp/issues/3)
+- [x] [**Issue #4** — Discover and validate `p4`](https://github.com/frossdelaqrois/perforce-mcp/issues/4)
+- [x] [**Issue #27** — Add GitHub Actions CI](https://github.com/frossdelaqrois/perforce-mcp/issues/27)
+- [x] [**Issue #5** — Safe Perforce process runner and error model](https://github.com/frossdelaqrois/perforce-mcp/issues/5)
+- [x] [**Issue #6** — `get_perforce_info`](https://github.com/frossdelaqrois/perforce-mcp/issues/6)
+- [x] [**Issue #7** — `get_opened_files`](https://github.com/frossdelaqrois/perforce-mcp/issues/7)
+- [x] [**Issue #8** — `get_pending_changelists`](https://github.com/frossdelaqrois/perforce-mcp/issues/8)
 
 Check an item only after its pull request has been reviewed and merged into `main`.
 
@@ -219,16 +252,16 @@ safe response is shaped like this abbreviated example:
 
 ## Delivery phases
 
+0. Product definition
 1. Read-only local MCP prototype
-2. Expanded Perforce read capabilities
-3. Secure Windows companion
-4. Hosted authenticated gateway and device pairing
-5. UnrealGameSync and Unreal-specific features
-6. ChatGPT Apps SDK onboarding and result cards
-7. Safe, confirmation-gated write operations
-8. Privacy, security, reliability, and support readiness
-9. ChatGPT app-directory submission
-10. Optional Codex, enterprise, macOS, Linux, and other MCP-client support
+2. Unreal developer read workflows
+3. Trusted Windows companion
+4. Safe confirmation-gated write operations
+5. Deeper Unreal Engine workflows
+6. Hosted MCP gateway and authentication
+7. ChatGPT app experience
+8. Publication readiness
+9. Expansion
 
 ## Documentation
 
@@ -267,11 +300,10 @@ safe response is shaped like this abbreviated example:
 ## Repository status
 
 - Product planning and architecture: substantially defined
-- Initial .NET solution scaffold: complete
-- Technology decision: complete
-- `p4` discovery implementation: under review in PR #28
-- Read-only implementation issues: sequenced for Codex
-- Hosted and ChatGPT app work: specified as later issues
+- Phase 1 read-only local prototype: complete
+- Phase 2 Unreal developer read workflows: active at 2 / 8
+- Next ordered feature: [#40 — Summarise today's Perforce work](https://github.com/frossdelaqrois/perforce-mcp/issues/40)
+- Hosted, companion, write, and ChatGPT app work: specified as later phases
 
 Public APIs and architecture may still change during the prototype stage.
 
