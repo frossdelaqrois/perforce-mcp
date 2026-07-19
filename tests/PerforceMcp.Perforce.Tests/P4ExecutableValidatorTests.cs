@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace PerforceMcp.Perforce.Tests;
 
 [Collection(P4ProcessTestGroup.Name)]
@@ -17,7 +15,7 @@ public sealed class P4ExecutableValidatorTests
             AppContext.BaseDirectory,
             "P4ValidatorTestProcess.exe");
         var validator = new P4ExecutableValidator();
-        HashSet<int> existingProcessIds = GetTestProcessIds();
+        HashSet<int> existingProcessIds = P4ProcessTestAssertions.GetProcessIds();
 
         P4ExecutableValidationResult result = await validator.ValidateAsync(
             executablePath,
@@ -25,7 +23,7 @@ public sealed class P4ExecutableValidatorTests
             CancellationToken.None);
 
         Assert.Equal(P4ExecutableValidationStatus.TimedOut, result.Status);
-        Assert.Empty(GetTestProcessIds().Except(existingProcessIds));
+        await P4ProcessTestAssertions.AssertNoNewProcessesRemainAsync(existingProcessIds);
     }
 
     [Fact]
@@ -50,19 +48,4 @@ public sealed class P4ExecutableValidatorTests
         Assert.Null(P4ExecutableValidator.ParsePerforceVersion(output));
     }
 
-    private static HashSet<int> GetTestProcessIds()
-    {
-        using Process currentProcess = Process.GetCurrentProcess();
-        return Process
-            .GetProcessesByName("P4ValidatorTestProcess")
-            .Where(process => process.Id != currentProcess.Id)
-            .Select(process =>
-            {
-                using (process)
-                {
-                    return process.Id;
-                }
-            })
-            .ToHashSet();
-    }
 }
