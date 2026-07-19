@@ -70,6 +70,10 @@ Build a local read-only MCP prototype exposing:
 - `get_opened_files`
 - `get_pending_changelists`
 
+Phase 2 begins with `get_file_open_status`, which answers who has a specific
+file or Unreal asset open and whether the visible open state blocks the current
+user.
+
 ### Recommended Codex issue order
 
 - [x] **Issue #2** — Decide the .NET and MCP SDK versions
@@ -147,6 +151,31 @@ This read-only MCP tool lists pending changelists owned by the current Perforce 
 The optional `limit` defaults to 20 and is capped at 100. File metadata is omitted unless `includeFiles` is true, while `fileLimit` independently defaults to 100 and is capped at 200 per changelist. `fileCount` reports the number safely inspected; `isFileCountExact` is false and `filesTruncated` is true when the per-changelist bound was reached. No raw command output or file contents are returned.
 
 Empty results are successful. Invalid limits, missing login, missing workspace, unreachable server, timeout, malformed or oversized tagged output, and other non-zero exits return structured errors without echoing credentials, tickets, environment values, or raw output. The optional integration test is enabled by `PERFORCE_MCP_TEST_P4_PATH` and skipped by default.
+
+## `get_file_open_status`
+
+This Phase 2 read-only tool accepts one depot path, local path inside the active
+workspace, or exact filename. Exact filenames use a bounded lookup and return
+all bounded matches with ambiguity and truncation metadata; the tool never
+silently chooses between duplicate names. Wildcards and local paths outside the
+workspace are rejected.
+
+Each match contains canonical depot and local paths, file type, Unreal-asset
+classification for `.uasset` and `.umap`, and structured open records containing
+the user, client, action, changelist, observed lock state, exclusive-open state,
+whether the user and client match the current workspace, and whether that record
+blocks the current workspace. Candidate and open-record
+truncation are reported separately. A file opened by another
+user—or by the current username in another client—is reported as blocking only
+when the visible record uses an exclusive-open (`+l`) file type. A `locked` tag is
+reported as raw observed state but does not independently prove that editing is
+blocked. The tool never returns file contents or performs an
+unlock, revert, checkout, sync, or other write operation.
+
+The implementation uses only fixed, bounded tagged `info`, `files`, `fstat`, and
+`opened -a` reads through the safe process runner. Its optional integration test
+uses `PERFORCE_MCP_TEST_P4_PATH` and optionally `PERFORCE_MCP_TEST_FILE`; it is
+skipped by default.
 
 ## Delivery phases
 

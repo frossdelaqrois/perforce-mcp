@@ -20,6 +20,7 @@ if (!executable.IsSuccess)
 builder.Services.AddSingleton(new P4InfoService(executable));
 builder.Services.AddSingleton(new P4OpenedFilesService(executable));
 builder.Services.AddSingleton(new P4PendingChangelistsService(executable));
+builder.Services.AddSingleton(new P4FileOpenStatusService(executable));
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
