@@ -147,14 +147,26 @@ public static partial class P4ErrorExplanationService
         AddWhenMatched(text, categories, ErrorCategory.Authentication,
             "password invalid", "p4passwd invalid", "p4passwd unset", "please login", "login required", "session has expired",
             "ticket expired", "not logged in", "authentication failed");
+        if (text.Contains("p4passwd", StringComparison.OrdinalIgnoreCase) &&
+            ContainsAny(text, "invalid", "unset", "expired"))
+        {
+            categories.Add(ErrorCategory.Authentication);
+        }
+
         AddWhenMatched(text, categories, ErrorCategory.Connection,
             "connect to server failed", "tcp connect", "connection refused", "host not found",
             "name resolution", "network is unreachable", "could not connect");
         AddWhenMatched(text, categories, ErrorCategory.Workspace,
             "client unknown", "unknown client", "no client name", "client not found",
             "workspace unknown", "not under client's root", "not in client view");
+        if (UnknownClientRegex().IsMatch(text))
+        {
+            categories.Add(ErrorCategory.Workspace);
+        }
+
         AddWhenMatched(text, categories, ErrorCategory.Permission,
-            "no permission", "permission denied", "protections table", "not permitted", "access denied");
+            "no permission", "permission denied", "protections table", "not permitted", "access denied",
+            "don't have permission", "do not have permission");
         AddWhenMatched(text, categories, ErrorCategory.ResolveRequired,
             "must resolve", "resolve required", "unresolved file", "needs resolve", "outstanding resolves");
         AddWhenMatched(text, categories, ErrorCategory.ExclusiveLock,
@@ -164,7 +176,7 @@ public static partial class P4ErrorExplanationService
             "no space left", "disk full", "insufficient disk space", "out of disk space",
             "not enough space", "storage quota");
         AddWhenMatched(text, categories, ErrorCategory.ServerAvailability,
-            "server too busy", "server unavailable", "service unavailable", "overloaded",
+            "server too busy", "server is too busy", "server unavailable", "service unavailable", "overloaded",
             "try again later", "maximum users");
     }
 
@@ -179,6 +191,9 @@ public static partial class P4ErrorExplanationService
             categories.Add(category);
         }
     }
+
+    private static bool ContainsAny(string text, params string[] indicators) =>
+        indicators.Any(indicator => text.Contains(indicator, StringComparison.OrdinalIgnoreCase));
 
     private static List<string> DetectSensitiveContent(string text)
     {
@@ -290,6 +305,11 @@ public static partial class P4ErrorExplanationService
         @"(?i)\b(?:P4PASSWD|password|passwd|ticket|authorization|api[_-]?key|access[_-]?token)\b\s*[:=]\s*[^\s;,]+|\bbearer\s+[^\s;,]+|\bP4PASSWD\b",
         RegexOptions.CultureInvariant | RegexOptions.NonBacktracking)]
     private static partial Regex CredentialRegex();
+
+    [GeneratedRegex(
+        @"(?i)\bclient\s+(?:'[^'\r\n]{1,128}'|""[^""\r\n]{1,128}""|[^\s\r\n]{1,128})\s+unknown\b",
+        RegexOptions.CultureInvariant | RegexOptions.NonBacktracking)]
+    private static partial Regex UnknownClientRegex();
 
     [GeneratedRegex(
         @"(?i)\b[a-z][a-z0-9+.-]*://[^\s/:@]+:[^\s/@]+@",

@@ -5,14 +5,14 @@ namespace PerforceMcp.Perforce.Tests;
 public sealed class P4ErrorExplanationServiceTests
 {
     [Theory]
-    [InlineData("Perforce password invalid; please login again.", "authentication", "AUTH_REQUIRED")]
+    [InlineData("Perforce password (P4PASSWD) invalid or unset.", "authentication", "AUTH_REQUIRED")]
     [InlineData("TCP connect failed because the network is unreachable.", "connection", "SERVER_UNREACHABLE")]
-    [InlineData("Client unknown and not in client view.", "workspace", "CLIENT_NOT_CONFIGURED")]
-    [InlineData("Permission denied by the protections table.", "permission", "PERMISSION_DENIED")]
+    [InlineData("Client 'fictional-workspace' unknown.", "workspace", "CLIENT_NOT_CONFIGURED")]
+    [InlineData("You don't have permission for this operation.", "permission", "PERMISSION_DENIED")]
     [InlineData("Files must resolve before continuing.", "resolve", "RESOLVE_REQUIRED")]
     [InlineData("Exclusive file already opened by another workspace.", "exclusive_lock", "EXCLUSIVE_LOCK")]
     [InlineData("No space left on device; disk full.", "storage", "STORAGE_EXHAUSTED")]
-    [InlineData("Server too busy and temporarily unavailable; try again later.", "server_availability", "SERVER_UNAVAILABLE")]
+    [InlineData("Server is too busy; try again later.", "server_availability", "SERVER_UNAVAILABLE")]
     public void ClassifiesSupportedRawErrors(string errorText, string category, string code)
     {
         P4ErrorExplanationResult result = P4ErrorExplanationService.Explain(errorText);
